@@ -23,22 +23,31 @@ socket.on('connect', () => {
   })
 })
 
-socket.on('chat-message', (name, msg) => {
-  appendMessage(name, msg)
+socket.on('new-user', (name) => {
+  addServerMessage(`${name} has joined the chat`)
 })
 
+socket.on('chat-message', (name, msg) => {
+  addUserMessage(name, msg)
+})
 
 form.addEventListener('submit', (e) => {
   e.preventDefault()
   if (input.value) {
     socket.emit('chat-message', userName, input.value)
-    appendMessage(userName, input.value)
+    addUserMessage(userName, input.value)
     input.value = ''
   }
 })
 
-function appendMessage(name, message){
+function addUserMessage(name, message){
   const messageDomElement = document.createElement('li')
   messageDomElement.textContent = `${name}: ${message}`
+  messageList.appendChild(messageDomElement)
+}
+
+function addServerMessage(message){
+  const messageDomElement = document.createElement('li')
+  messageDomElement.textContent = message
   messageList.appendChild(messageDomElement)
 }

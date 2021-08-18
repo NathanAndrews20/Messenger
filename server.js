@@ -13,10 +13,9 @@ app.get('/', (req, res) => {
 })
 
 io.on('connection', (socket) => {
-  console.log(`a new user with id: ${socket.id} has connected`)
 
   socket.on('new-user', (userName) => {
-    console.log(`user ${socket.id} has selected the username: ${userName}`)
+    socket.emit('new-user', userName)
   })
 
   socket.on('chat-message', (userName, msg) => {
