@@ -4,6 +4,10 @@ const modalWrapper = document.getElementById('modal-wrapper')
 const modalForm = document.getElementById('modal-form')
 const modalInput = document.getElementById('modal-input')
 
+const form = document.getElementById('form')
+const input = document.getElementById('input')
+const messageList = document.getElementById('message-list')
+
 let userName = ''
 
 socket.on('connect', () => {
@@ -19,17 +23,22 @@ socket.on('connect', () => {
   })
 })
 
-const form = document.getElementById('form')
-const input = document.getElementById('input')
-
-socket.on('chat-message', (msg) => {
-  console.log(msg)
+socket.on('chat-message', (name, msg) => {
+  appendMessage(name, msg)
 })
+
 
 form.addEventListener('submit', (e) => {
   e.preventDefault()
   if (input.value) {
-    socket.emit('chat-message', input.value)
+    socket.emit('chat-message', userName, input.value)
+    appendMessage(userName, input.value)
     input.value = ''
   }
 })
+
+function appendMessage(name, message){
+  const messageDomElement = document.createElement('li')
+  messageDomElement.textContent = `${name}: ${message}`
+  messageList.appendChild(messageDomElement)
+}

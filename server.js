@@ -6,8 +6,6 @@ const server = http.createServer(app)
 const { Server } = require('socket.io')
 const io = new Server(server)
 
-let userName = ''
-
 app.use(express.static(path.join(__dirname, '/public')))
 
 app.get('/', (req, res) => {
@@ -17,13 +15,12 @@ app.get('/', (req, res) => {
 io.on('connection', (socket) => {
   console.log(`a new user with id: ${socket.id} has connected`)
 
-  socket.on('new-user', (name) => {
-    console.log(`user ${socket.id} has selected the username: ${name}`)
-    userName = name
+  socket.on('new-user', (userName) => {
+    console.log(`user ${socket.id} has selected the username: ${userName}`)
   })
 
-  socket.on('chat-message', (msg) => {
-    console.log('message: ' + msg)
+  socket.on('chat-message', (userName, msg) => {
+    socket.broadcast.emit('chat-message', userName, msg)
   })
 
   socket.on('disconnect', () => {
