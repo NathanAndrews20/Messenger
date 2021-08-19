@@ -17,6 +17,7 @@ socket.on('connect', () => {
     if (modalInput.value) {
       socket.emit('new-user', modalInput.value)
       userName = modalInput.value
+      addAnnouncement(`${userName} has joined the chat`)
       modalInput.value = ''
       modalWrapper.style.display = 'none'
     }
@@ -24,11 +25,11 @@ socket.on('connect', () => {
 })
 
 socket.on('new-user', (name) => {
-  addServerMessage(`${name} has joined the chat`)
+  addAnnouncement(`${name} has joined the chat`)
 })
 
 socket.on('user-typing', (name) => {
-  addServerMessage(`${name} is typing...`)
+  addAnnouncement(`${name} is typing...`)
 })
 
 socket.on('user-done-typing', (userName) => {
@@ -63,7 +64,6 @@ function removeTypingMessage(name){
   const nodeList = document.querySelectorAll('#message-list > li')
   for (let i = 0; i<nodeList.length; i++) {
     const nodeTextContent = nodeList[i].textContent
-    console.log(nodeTextContent)
     if (nodeTextContent === `${name} is typing...`) {
       messageList.removeChild(nodeList[i])
       return
@@ -77,7 +77,7 @@ function addUserMessage(name, message){
   messageList.appendChild(messageDomElement)
 }
 
-function addServerMessage(message){
+function addAnnouncement(message){
   const messageDomElement = document.createElement('li')
   messageDomElement.textContent = message
   messageList.appendChild(messageDomElement)
