@@ -7,8 +7,6 @@ Simple Messaging App
 
 *HTML, CSS, and JavaScript*
 
-You can chat now at @ <https://nathanandrews20.github.io/Messenger/>
-
 Notes
 --------------
 
