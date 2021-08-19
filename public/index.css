@@ -61,6 +61,10 @@ body {
   background-color: hsl(0, 0%, 85%);
 }
 
+.user-name{
+  font-weight: bold;
+}
+
 #form {
   box-sizing: border-box;
   position: fixed;

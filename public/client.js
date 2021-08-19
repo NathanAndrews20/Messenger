@@ -27,22 +27,53 @@ socket.on('new-user', (name) => {
   addServerMessage(`${name} has joined the chat`)
 })
 
+socket.on('user-typing', (name) => {
+  addServerMessage(`${name} is typing...`)
+})
+
+socket.on('user-done-typing', (userName) => {
+  removeTypingMessage(userName)
+})
+
 socket.on('chat-message', (name, msg) => {
   addUserMessage(name, msg)
+})
+
+input.addEventListener('focus', e => {
+  e.preventDefault
+  socket.emit('user-typing', userName)
+})
+
+input.addEventListener('blur', e => {
+  e.preventDefault
+  socket.emit('user-done-typing', userName)
 })
 
 form.addEventListener('submit', (e) => {
   e.preventDefault()
   if (input.value) {
+    socket.emit('user-done-typing', userName)
     socket.emit('chat-message', userName, input.value)
     addUserMessage(userName, input.value)
     input.value = ''
   }
 })
 
+function removeTypingMessage(name){
+  const nodeList = document.querySelectorAll('#message-list > li')
+  for (let i = 0; i<nodeList.length; i++) {
+    const nodeTextContent = nodeList[i].textContent
+    console.log(nodeTextContent)
+    if (nodeTextContent === `${name} is typing...`) {
+      messageList.removeChild(nodeList[i])
+      return
+    }
+  }
+}
+
 function addUserMessage(name, message){
   const messageDomElement = document.createElement('li')
-  messageDomElement.textContent = `${name}: ${message}`
+  messageDomElement.innerHTML = `<span class="user-name">${name}</span>: ${message}`
   messageList.appendChild(messageDomElement)
 }
 
